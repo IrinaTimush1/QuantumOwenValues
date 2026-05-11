@@ -1,0 +1,40 @@
+QNN gate order. Python index is 0-based; paper gate index is 1-based.
+
+python_idx= 0 | paper_gate= 1 | name=h   | qubits=[0] | params=[] | LOCKED/PASSIVE
+python_idx= 1 | paper_gate= 2 | name=p   | qubits=[0] | params=['feat_p0'] | ACTIVE group=Q0
+python_idx= 2 | paper_gate= 3 | name=h   | qubits=[1] | params=[] | LOCKED/PASSIVE
+python_idx= 3 | paper_gate= 4 | name=p   | qubits=[1] | params=['feat_p1'] | ACTIVE group=Q1
+python_idx= 4 | paper_gate= 5 | name=cx  | qubits=[0, 1] | params=[] | ACTIVE group=2Q
+python_idx= 5 | paper_gate= 6 | name=p   | qubits=[1] | params=['feat_p2'] | ACTIVE group=Q1
+python_idx= 6 | paper_gate= 7 | name=cx  | qubits=[0, 1] | params=[] | ACTIVE group=2Q
+python_idx= 7 | paper_gate= 8 | name=h   | qubits=[0] | params=[] | ACTIVE group=Q0
+python_idx= 8 | paper_gate= 9 | name=p   | qubits=[0] | params=['feat_p3'] | ACTIVE group=Q0
+python_idx= 9 | paper_gate=10 | name=h   | qubits=[1] | params=[] | ACTIVE group=Q1
+python_idx=10 | paper_gate=11 | name=p   | qubits=[1] | params=['feat_p4'] | ACTIVE group=Q1
+python_idx=11 | paper_gate=12 | name=cx  | qubits=[0, 1] | params=[] | ACTIVE group=2Q
+python_idx=12 | paper_gate=13 | name=p   | qubits=[1] | params=['feat_p5'] | ACTIVE group=Q1
+python_idx=13 | paper_gate=14 | name=cx  | qubits=[0, 1] | params=[] | ACTIVE group=2Q
+python_idx=14 | paper_gate=15 | name=ry  | qubits=[0] | params=['theta_0'] | ACTIVE group=Q0
+python_idx=15 | paper_gate=16 | name=ry  | qubits=[1] | params=['theta_1'] | ACTIVE group=Q1
+python_idx=16 | paper_gate=17 | name=cx  | qubits=[0, 1] | params=[] | ACTIVE group=2Q
+python_idx=17 | paper_gate=18 | name=ry  | qubits=[0] | params=['theta_2'] | ACTIVE group=Q0
+python_idx=18 | paper_gate=19 | name=ry  | qubits=[1] | params=['theta_3'] | ACTIVE group=Q1F
+
+Selected partition: qubit_role (qubit-role partition)
+Partition, 1-based paper gate indices:
+  Q0 (q0 local readout path): [2, 8, 9, 15, 18]
+  Q1 (q1 local hidden path): [4, 6, 10, 11, 13, 16]
+  2Q (two-qubit couplers): [5, 7, 12, 14, 17]
+  Q1F (final q1 post-readout rotation): [19]
+
+Partition, 0-based Python instruction indices:
+  Q0 (q0 local readout path): [1, 7, 8, 14, 17]
+  Q1 (q1 local hidden path): [3, 5, 9, 10, 12, 15]
+  2Q (two-qubit couplers): [4, 6, 11, 13, 16]
+  Q1F (final q1 post-readout rotation): [18]
+
+Partition semantics:
+  Q0: local gates acting on measured/readout qubit q0
+  Q1: local gates acting on hidden/unmeasured qubit q1
+  2Q: two-qubit CX gates that couple readout and hidden paths
+  Q1F: final local rotation on q1; expected to be close to irrelevant for q0 readout
