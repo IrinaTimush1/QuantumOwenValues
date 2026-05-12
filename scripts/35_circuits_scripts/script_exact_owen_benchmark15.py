@@ -130,13 +130,29 @@ def load_summary(summary_csv: Path) -> pd.DataFrame:
     return df
 
 
-def get_exact_ids(summary_df: pd.DataFrame) -> List[str]:
-    exact_df = summary_df.loc[summary_df["selection_mode"].astype(str).str.lower() == "exact"]
+def get_exact_ids(
+    summary_df: pd.DataFrame,
+    benchmark_ids: Optional[Sequence[str]] = None,
+    expected_count: Optional[int] = 15,
+) -> List[str]:
+    if benchmark_ids is not None and len(benchmark_ids) > 0:
+        ids = [str(x) for x in benchmark_ids]
+        available = set(summary_df["benchmark_id"].astype(str))
+        missing = [x for x in ids if x not in available]
+        if missing:
+            raise ValueError(f"Requested benchmark IDs not found in summary CSV: {missing}")
+        return ids
+
+    exact_df = summary_df.loc[
+        summary_df["selection_mode"].astype(str).str.lower() == "exact"
+    ]
     ids = exact_df["benchmark_id"].astype(str).tolist()
-    if len(ids) != 15:
+
+    if expected_count is not None and len(ids) != expected_count:
         raise ValueError(
-            f"Expected exactly 15 exact benchmark circuits, found {len(ids)}: {ids}"
+            f"Expected exactly {expected_count} exact benchmark circuits, found {len(ids)}: {ids}"
         )
+
     return ids
 
 
@@ -464,11 +480,13 @@ def load_gate_spec(
                     )
                 locked.append(idx)
 
-        if not (1 <= len(active) <= 8):
+        MAX_EXACT_ACTIVE_PLAYERS = 10
+        if not (1 <= len(active) <= MAX_EXACT_ACTIVE_PLAYERS):
             raise ValueError(
-                f"{benchmark_id}: expected 1..8 active players for exact Owen, found {len(active)}."
+                f"{benchmark_id}: expected 1..{MAX_EXACT_ACTIVE_PLAYERS} active players "
+                f"for exact Owen in the 5q experiment, found {len(active)}."
                 )
-        if len(active) < 6:
+        if len(active) < 5:
             print(
                 f"Warning: {benchmark_id} has only {len(active)} active players. "
                 "This is still fine for exact Owen, but it differs from the original 6-8 target."
@@ -800,6 +818,18 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Only write the gate-spec scaffold CSV and stop.",
     )
+    p.add_argument(
+    "--benchmark-ids",
+    nargs="+",
+    default=None,
+    help="Optional explicit benchmark IDs to run, e.g. I11 I22 I33 I44 I55.",
+    )
+    p.add_argument(
+        "--expected-count",
+        type=int,
+        default=15,
+        help="Expected number of selected circuits when --benchmark-ids is not provided. Use -1 to disable.",
+    )
     return p.parse_args()
 
 
@@ -921,7 +951,12 @@ def main() -> None:
     args = parse_args()
 
     summary_df = load_summary(args.summary_csv)
-    exact_ids = get_exact_ids(summary_df)
+    expected_count = None if args.expected_count < 0 else args.expected_count
+    exact_ids = get_exact_ids(
+        summary_df,
+        benchmark_ids=args.benchmark_ids,
+        expected_count=expected_count,
+        )
     print_selection_summary(summary_df)
 
     benchmark_map = load_benchmark_pickle(
