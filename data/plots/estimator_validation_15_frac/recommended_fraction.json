@@ -1,0 +1,98 @@
+{
+  "group_mae_threshold": 0.02,
+  "top_agree_threshold": 0.95,
+  "per_fraction_feasibility": [
+    {
+      "sample_percent": 30,
+      "sample_frac": 0.3,
+      "label": "30%",
+      "per_property": {
+        "entanglement": {
+          "mean_group_mae": 0.10281168591322282,
+          "top_agree_rate": 0.7266666666666667,
+          "passes_mae": false,
+          "passes_top_agree": false,
+          "passes_both": false
+        },
+        "magic": {
+          "mean_group_mae": 0.01855029668759007,
+          "top_agree_rate": 0.9533333333333334,
+          "passes_mae": true,
+          "passes_top_agree": true,
+          "passes_both": true
+        }
+      },
+      "all_properties_pass": false
+    },
+    {
+      "sample_percent": 50,
+      "sample_frac": 0.5,
+      "label": "50%",
+      "per_property": {
+        "entanglement": {
+          "mean_group_mae": 0.08216134414540015,
+          "top_agree_rate": 0.7733333333333333,
+          "passes_mae": false,
+          "passes_top_agree": false,
+          "passes_both": false
+        },
+        "magic": {
+          "mean_group_mae": 0.015906696740760347,
+          "top_agree_rate": 0.9266666666666666,
+          "passes_mae": true,
+          "passes_top_agree": false,
+          "passes_both": false
+        }
+      },
+      "all_properties_pass": false
+    },
+    {
+      "sample_percent": 70,
+      "sample_frac": 0.7,
+      "label": "70%",
+      "per_property": {
+        "entanglement": {
+          "mean_group_mae": 0.06173144717427942,
+          "top_agree_rate": 0.7666666666666667,
+          "passes_mae": false,
+          "passes_top_agree": false,
+          "passes_both": false
+        },
+        "magic": {
+          "mean_group_mae": 0.010835045744904202,
+          "top_agree_rate": 0.96,
+          "passes_mae": true,
+          "passes_top_agree": true,
+          "passes_both": true
+        }
+      },
+      "all_properties_pass": false
+    },
+    {
+      "sample_percent": 90,
+      "sample_frac": 0.9,
+      "label": "90%",
+      "per_property": {
+        "entanglement": {
+          "mean_group_mae": 0.05395466905515287,
+          "top_agree_rate": 0.7,
+          "passes_mae": false,
+          "passes_top_agree": false,
+          "passes_both": false
+        },
+        "magic": {
+          "mean_group_mae": 0.014174173723456421,
+          "top_agree_rate": 0.9333333333333333,
+          "passes_mae": true,
+          "passes_top_agree": false,
+          "passes_both": false
+        }
+      },
+      "all_properties_pass": false
+    }
+  ],
+  "recommended_sample_percent": 70,
+  "recommended_sample_frac": 0.7,
+  "recommended_label": "70%",
+  "reasoning": "No tested fraction satisfied both thresholds for both properties. Falling back to the fraction that maximises (mean top-group agreement - mean group MAE)."
+}

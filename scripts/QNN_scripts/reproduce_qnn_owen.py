@@ -26,22 +26,25 @@ What this script does
     Figure-13-style: K=32 Owen values with mean +/- std over runs
     Figure-14-style: K comparison for K in {1,8,16,32}
 
-E/M/X partition used here
--------------------------
-This script keeps the same sequence-based E/M/X structure used in the 35-circuit
-experiments:
+This script uses a motif-based physical E/M/X coalition structure:
 
 E = Entanglement coalition:
-    h gates treated as entanglement-preparing Clifford scaffold + CX/CZ layer
+    active Hadamard gates treated as entanglement-preparing Clifford scaffold
+    together with the CNOT/CZ layer.
+
 M = Magic coalition:
-    non-Clifford single-qubit gates not sequence-adjacent to a CX/CZ
+    local non-Clifford single-qubit feature/readout rotations whose primary
+    role is local feature encoding or local post-entangling readout processing.
+
 X = Mix coalition:
-    non-Clifford single-qubit gates sequence-adjacent to a CX/CZ
+    non-Clifford gates embedded in entangling motifs, including cross-feature
+    phase gates inside CX-P-CX motifs and trainable rotations immediately
+    preparing the final classifier CNOT.
 
 For the paper QNN active gates, this gives the following paper 1-based groups:
     E: [5, 7, 8, 10, 12, 14, 17]
-    M: [2, 9, 19]
-    X: [4, 6, 11, 13, 15, 16, 18]
+    M: [2, 4, 9, 11, 18, 19]
+    X: [6, 13, 15, 16]
 
 The script validates that the partition exactly covers the active gates and
 that locked gates are not part of the Owen game.
@@ -102,13 +105,17 @@ FEATURE_PARAM_NAMES = [f"feat_p{i}" for i in range(6)]
 THETA_PARAM_NAMES = [f"theta_{i}" for i in range(4)]
 
 # E/M/X partition, paper 1-based indices.
-# This follows the user's chosen 35-circuit style:
-# E: H scaffold + CX layer, M: non-Clifford local rotations not adjacent to CX,
-# X: non-Clifford local rotations adjacent to CX.
+# E: active Clifford entanglement scaffold:
+#    active H gates + CNOT/CZ layer.
+# M: local non-Clifford feature/readout rotations:
+#    local P(phi_i(x_i)) feature encoders and final local RY readout rotations.
+# X: mixed non-Clifford gates embedded in entangling/classifier motifs:
+#    cross-feature phase gates inside CX-P-CX motifs and trainable RY gates
+#    immediately preparing the final classifier CX.
 EMX_PARTITION_1_BASED: Dict[str, List[int]] = {
     "E": [5, 7, 8, 10, 12, 14, 17],
-    "M": [2, 9, 19],
-    "X": [4, 6, 11, 13, 15, 16, 18],
+    "M": [2, 4, 9, 11, 18, 19],
+    "X": [6, 13, 15, 16],
 }
 EMX_PARTITION_0_BASED: Dict[str, List[int]] = {
     label: [g - 1 for g in gates] for label, gates in EMX_PARTITION_1_BASED.items()
@@ -943,9 +950,9 @@ def save_config(args: argparse.Namespace, theta: Sequence[float], output_dir: Pa
         "partition_1_based": EMX_PARTITION_1_BASED,
         "partition_0_based": EMX_PARTITION_0_BASED,
         "partition_semantics": {
-            "E": "H gates treated as entanglement-preparing Clifford scaffold plus CX/CZ layer",
-            "M": "non-Clifford single-qubit gates not sequence-adjacent to CX/CZ",
-            "X": "non-Clifford single-qubit gates sequence-adjacent to CX/CZ",
+            "E": "active H gates treated as entanglement-preparing Clifford scaffold plus the CX/CZ layer",
+            "M": "local non-Clifford feature/readout rotations with primarily single-qubit role",
+            "X": "non-Clifford gates embedded in entangling motifs: cross-feature CX-P-CX phases and classifier-preparing RY gates",
         },
         "value_function": "one-shot test accuracy; first-qubit readout; no retraining",
         "estimator_note": (
