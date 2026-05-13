@@ -90,9 +90,16 @@ import matplotlib.pyplot as plt
 PAPER_THETA = np.array([3.860, -1.070, -1.583, 0.860], dtype=float)
 
 # Paper gate numbers are 1-based. Qiskit instruction indices are 0-based.
-PAPER_LOCKED_GATES_1_BASED = [1, 3]
+# Paper gate numbers are 1-based. Qiskit instruction indices are 0-based.
+# For this E/M/X version, all Hadamard gates are passive/locked.
+# H gates in the QNN are paper gates 1, 3, 8, and 10.
+PAPER_LOCKED_GATES_1_BASED = [1, 3, 8, 10]
 PAPER_LOCKED_INSTRUCTIONS_0_BASED = [g - 1 for g in PAPER_LOCKED_GATES_1_BASED]
-PAPER_ACTIVE_GATES_1_BASED = [2] + list(range(4, 20))
+
+PAPER_ACTIVE_GATES_1_BASED = [
+    g for g in range(1, 20)
+    if g not in PAPER_LOCKED_GATES_1_BASED
+]
 PAPER_ACTIVE_INSTRUCTIONS_0_BASED = [g - 1 for g in PAPER_ACTIVE_GATES_1_BASED]
 
 PAPER_GATE_NAMES_1_BASED = {
@@ -105,15 +112,15 @@ FEATURE_PARAM_NAMES = [f"feat_p{i}" for i in range(6)]
 THETA_PARAM_NAMES = [f"theta_{i}" for i in range(4)]
 
 # E/M/X partition, paper 1-based indices.
-# E: active Clifford entanglement scaffold:
-#    active H gates + CNOT/CZ layer.
-# M: local non-Clifford feature/readout rotations:
-#    local P(phi_i(x_i)) feature encoders and final local RY readout rotations.
-# X: mixed non-Clifford gates embedded in entangling/classifier motifs:
-#    cross-feature phase gates inside CX-P-CX motifs and trainable RY gates
-#    immediately preparing the final classifier CX.
+# E: CNOT-only entangling scaffold.
+# M: local non-Clifford feature/readout rotations with primarily single-qubit role.
+# X: local non-Clifford rotations embedded in entangling motifs:
+#    cross-feature phase gates inside CX-P-CX sandwiches and trainable RY gates
+#    immediately preparing the final classifier CNOT.
+#
+# Passive/locked: all H gates [1, 3, 8, 10].
 EMX_PARTITION_1_BASED: Dict[str, List[int]] = {
-    "E": [5, 7, 8, 10, 12, 14, 17],
+    "E": [5, 7, 12, 14, 17],
     "M": [2, 4, 9, 11, 18, 19],
     "X": [6, 13, 15, 16],
 }
@@ -950,9 +957,10 @@ def save_config(args: argparse.Namespace, theta: Sequence[float], output_dir: Pa
         "partition_1_based": EMX_PARTITION_1_BASED,
         "partition_0_based": EMX_PARTITION_0_BASED,
         "partition_semantics": {
-            "E": "active H gates treated as entanglement-preparing Clifford scaffold plus the CX/CZ layer",
-            "M": "local non-Clifford feature/readout rotations with primarily single-qubit role",
-            "X": "non-Clifford gates embedded in entangling motifs: cross-feature CX-P-CX phases and classifier-preparing RY gates",
+            "E": "CNOT-only Clifford entangling scaffold",
+            "M": "local non-Clifford feature/readout rotations with primarily single-qubit processing role",
+            "X": "local non-Clifford rotations embedded in entangling motifs: cross-feature CX-P-CX phases and classifier-preparing RY gates",
+            "passive": "all Hadamard gates are locked/passive background gates",
         },
         "value_function": "one-shot test accuracy; first-qubit readout; no retraining",
         "estimator_note": (
