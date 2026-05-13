@@ -2,7 +2,8 @@
 """
 script_full35_estimated_study.py
 
-Full 35-circuit estimated Owen study at fixed n (default: 300).
+Full 35-circuit estimated Owen study at fixed Owen sampling fraction
+(default: 0.70).
 
 What this script does
 ---------------------
@@ -66,9 +67,22 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parent
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+SCRIPT_DIR = Path(__file__).resolve().parent
+REPO_ROOT = SCRIPT_DIR.parents[1]  # /Users/iratimush/xqml-thesis
+
+IMPORT_PATHS = [
+    SCRIPT_DIR,
+    REPO_ROOT,
+    REPO_ROOT / "qshaptools",
+    REPO_ROOT / "qshaptools" / "src",
+    REPO_ROOT / "qshaptools" / "src" / "qshaptools",
+]
+
+for p in IMPORT_PATHS:
+    if p.exists() and str(p) not in sys.path:
+        sys.path.insert(0, str(p))
+
+ROOT = REPO_ROOT
 
 # Reuse existing experiment / qshaptools integration from the repo.
 from script_exact_owen_benchmark15 import (  # type: ignore
@@ -84,7 +98,7 @@ from script_exact_owen_benchmark15 import (  # type: ignore
 )
 
 DEFAULT_GATE_SPEC = ROOT / "data" / "benchmark_35_gate_spec.csv"
-DEFAULT_OUTPUT_DIR = ROOT / "data" / "plots" / "estimated_full35_n300"
+DEFAULT_OUTPUT_DIR = ROOT / "data" / "plots" / "estimated_full35_frac70"
 
 ENTANGLERS = {"cx", "cz"}
 PARAMETRIC_OR_MAGICISH = {
@@ -108,7 +122,16 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--benchmark-pkl", type=Path, default=BENCHMARK_PKL)
     p.add_argument("--gate-spec-csv", type=Path, default=DEFAULT_GATE_SPEC)
     p.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
-    p.add_argument("--n", type=int, default=300)
+    p.add_argument(
+        "--sample-frac",
+        type=float,
+        default=0.70,
+        help=(
+            "Fraction of the Owen sampling space to sample. "
+            "Positive values use fraction-based sampling, e.g. 0.70. "
+            "This replaces the old fixed-n setting."
+        ),
+    )
     p.add_argument("--seed", type=int, default=123)
     p.add_argument(
         "--repeats",
@@ -288,7 +311,7 @@ def average_phi_dicts(phi_dicts: Sequence[Mapping[int, float]], gate_order: Sequ
 def run_estimated_once(
     item: BenchmarkCircuit,
     spec: Dict[str, Any],
-    n: int,
+    sample_frac: float,
     seed: int,
     property_name: str,
 ) -> Tuple[Dict[int, float], float]:
@@ -300,11 +323,11 @@ def run_estimated_once(
         value_kwargs_dict={},
         quantum_instance=None,
         locked_instructions=spec["locked"],
-        owen_sample_frac=-int(n),  # existing repo convention: negative = absolute sample count
+        owen_sample_frac=float(sample_frac), # existing repo convention: negative = absolute sample count
         owen_sample_reps=1,
         evaluate_value_only_once=False,
         owen_sample_seed=seed,
-        name=f"{item.benchmark_id}_{property_name}_n{n}_seed{seed}",
+        name=f"{item.benchmark_id}_{property_name}_frac{sample_frac:.2f}_seed{seed}",
         silent=True,
     )
     phi = qov.run()
@@ -315,7 +338,7 @@ def run_estimated_once(
 def run_estimated_for_circuit(
     item: BenchmarkCircuit,
     spec: Dict[str, Any],
-    n: int,
+    sample_frac: float,
     seed: int,
     repeats: int,
 ) -> Dict[str, Any]:
@@ -330,9 +353,10 @@ def run_estimated_for_circuit(
         s_magic = seed + r
         s_ent = seed + 10_000 + r
 
-        phi_m, rt_m = run_estimated_once(item, spec, n, s_magic, "magic")
-        phi_e, rt_e = run_estimated_once(item, spec, n, s_ent, "entanglement")
-
+        
+        phi_m, rt_m = run_estimated_once(item, spec, sample_frac, s_magic, "magic")
+        phi_e, rt_e = run_estimated_once(item, spec, sample_frac, s_ent, "entanglement")
+ 
         phi_magic_runs.append(phi_m)
         phi_ent_runs.append(phi_e)
         runtimes_magic.append(rt_m)
@@ -358,7 +382,7 @@ def run_estimated_for_circuit(
         "entanglement_q": float(item.summary_row.get("entanglement_q", np.nan)),
         "sre_norm": float(item.summary_row.get("sre_norm", np.nan)),
         "ent_norm": float(item.summary_row.get("ent_norm", np.nan)),
-        "n_samples": int(n),
+        "sample_frac": float(sample_frac),
         "seed": int(seed),
         "repeats": int(repeats),
         "phi_magic": phi_magic,
@@ -468,7 +492,7 @@ def build_circuit_summary(results: Sequence[Mapping[str, Any]]) -> pd.DataFrame:
             "entanglement_q": res["entanglement_q"],
             "sre_norm": res["sre_norm"],
             "ent_norm": res["ent_norm"],
-            "n_samples": res["n_samples"],
+            "sample_frac": res["sample_frac"],
             "repeats": res["repeats"],
             "runtime_magic_mean_s": res["runtime_magic_mean_s"],
             "runtime_entanglement_mean_s": res["runtime_entanglement_mean_s"],
@@ -505,7 +529,7 @@ def analyze_trends(summary_df: pd.DataFrame) -> str:
     lines.append("# Full 35-circuit estimated Owen study")
     lines.append("")
     lines.append(f"- Number of circuits: {len(summary_df)}")
-    lines.append(f"- Sample size n: {int(summary_df['n_samples'].iloc[0])}")
+    lines.append(f"- Owen sampling fraction: {float(summary_df['sample_frac'].iloc[0]):.2f}")
     lines.append(f"- Repeats per circuit/property: {int(summary_df['repeats'].iloc[0])}")
     lines.append("")
 
@@ -871,7 +895,7 @@ def main() -> None:
         result = run_estimated_for_circuit(
             item=benchmark_circuits[benchmark_id],
             spec=gate_spec[benchmark_id],
-            n=args.n,
+            sample_frac=args.sample_frac,
             seed=args.seed,
             repeats=args.repeats,
         )
