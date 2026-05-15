@@ -1,0 +1,8 @@
+r,gate_index_1based,gate_name,group,gate_subtype,owen_value,full_accuracy,empty_active_accuracy,data_index
+1,1,H,passive,,,0.767,0.5,3
+1,2,P,M,local_P,0.048250000000000015,0.767,0.5,3
+1,3,H,passive,,,0.767,0.5,3
+1,4,P,M,local_P,0.12291666666666667,0.767,0.5,3
+1,5,CX,E,,0.06866666666666665,0.767,0.5,3
+1,6,P,X,cross_P,0.027166666666666672,0.767,0.5,3
+1,7,CX,E,,0.0,0.767,0.5,3

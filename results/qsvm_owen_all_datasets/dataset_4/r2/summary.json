@@ -1,0 +1,57 @@
+{
+  "absolute_difference_from_target": 0.014000000000000012,
+  "cache_path": "results/qsvm_owen_all_datasets/dataset_4/r2/qsvm_value_cache.csv",
+  "convention": "cnot_0->1,cross_on_target,features_normal,sim_manual",
+  "data_index": 4,
+  "efficiency_gap": 0.0,
+  "empty_active_accuracy": 0.5,
+  "full_accuracy": 1.0,
+  "number_of_all_subset_distribution_evaluations": 0,
+  "number_of_exact_owen_value_evaluations": 128,
+  "obtained_accuracy": 1.0,
+  "partition": {
+    "E": [
+      5,
+      7,
+      12,
+      14
+    ],
+    "M": [
+      2,
+      4,
+      9,
+      11
+    ],
+    "X": [
+      6,
+      13
+    ]
+  },
+  "passive_gates": [
+    1,
+    3,
+    8,
+    10
+  ],
+  "r": 2,
+  "runtime_seconds": 0.30535387992858887,
+  "simulator_validation": {
+    "max_abs_difference": 1.8213770420226047e-16,
+    "max_infidelity": 2.4424906541753444e-15,
+    "num_checked_subsets": 12,
+    "num_points": 8,
+    "r": 2
+  },
+  "svc_c": 1.0,
+  "target_accuracy": 0.986,
+  "test_path": "data/qsvm-testdata-4.csv",
+  "test_shape": [
+    1000,
+    2
+  ],
+  "train_path": "data/qsvm-traindata-4.csv",
+  "train_shape": [
+    40,
+    2
+  ]
+}

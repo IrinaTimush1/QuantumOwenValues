@@ -1,0 +1,4 @@
+r,group,n_gates,gate_indices,group_owen_value,full_accuracy,empty_active_accuracy,data_index
+1,E,2,5-7,0.086,0.887,0.5,1
+1,M,2,2-4,0.16749999999999995,0.887,0.5,1
+1,X,1,6,0.13350000000000004,0.887,0.5,1
