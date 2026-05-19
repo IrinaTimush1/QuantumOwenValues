@@ -16,8 +16,8 @@ idx | gate | qubits | group | phi_magic | phi_entanglement
   0 | h    | [0]      | PASSIVE |  nan |  nan
   1 | h    | [0]      | PASSIVE |  nan |  nan
   2 | z    | [0]      | PASSIVE |  nan |  nan
-  3 | h    | [1]      | E       |  0.000000000000 |  0.333333333333
+  3 | h    | [1]      | PASSIVE |  nan |  nan
   4 | x    | [1]      | PASSIVE |  nan |  nan
   5 | s    | [1]      | PASSIVE |  nan |  nan
-  6 | cx   | [1, 2]   | E       |  0.000000000000 |  0.333333333333
+  6 | cx   | [1, 2]   | E       |  0.000000000000 |  0.666666666667
   7 | h    | [0]      | PASSIVE |  nan |  nan

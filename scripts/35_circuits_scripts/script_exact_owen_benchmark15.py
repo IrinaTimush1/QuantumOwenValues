@@ -65,8 +65,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parent
+SCRIPT_DIR = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[2]  # /Users/iratimush/xqml-thesis
+
 QSHAPTOOLS_SRC = ROOT / "qshaptools" / "src"
+if not QSHAPTOOLS_SRC.exists():
+    raise FileNotFoundError(f"Could not find qshaptools source directory: {QSHAPTOOLS_SRC}")
+
 if str(QSHAPTOOLS_SRC) not in sys.path:
     sys.path.insert(0, str(QSHAPTOOLS_SRC))
 
@@ -523,7 +528,7 @@ def calculate_stabilizer_renyi_entropy_qiskit(
     For n qubits with d = 2**n:
       xi_P = (1/d) * <psi|P|psi>^2
       A = sum_P xi_P^alpha
-      S_alpha = (1/(1-alpha)) * log(A) - log(d)
+      S_alpha = (1/(1-alpha)) * ln(A) - ln(d)
     """
     n = circuit.num_qubits
     d = 2 ** n

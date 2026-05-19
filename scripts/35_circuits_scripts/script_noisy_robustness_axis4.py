@@ -332,6 +332,7 @@ def noisy_sre_from_pauli_expectations(
     n: int,
     alpha: int = 2,
 ) -> float:
+    """Compute SRE in natural-log units, matching the exact statevector SRE."""
     d = 2 ** n
     A = 0.0
     for p in product(PAULIS, repeat=n):

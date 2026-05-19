@@ -419,20 +419,20 @@
     "property": "magic",
     "baseline_metric": 0.0727328083967913,
     "group_scores": {
-      "E": 9.992007221626409e-16,
-      "M": 0.0727328083967903
+      "E": 0.0,
+      "M": 0.07273280839679042
     },
     "top_group": "M",
     "top_groups_tied": [
       "M"
     ],
-    "top_score": 0.0727328083967903,
+    "top_score": 0.07273280839679042,
     "top_is_tie": false,
     "bottom_group": "E",
     "bottom_groups_tied": [
       "E"
     ],
-    "bottom_score": 9.992007221626409e-16,
+    "bottom_score": 0.0,
     "bottom_is_tie": false,
     "removed_top_group_gates": [
       0,
@@ -440,15 +440,14 @@
       2
     ],
     "removed_bottom_group_gates": [
-      4,
       5
     ],
     "metric_without_top": 8.881784197001252e-16,
-    "metric_without_bottom": 0.0727328083967902,
+    "metric_without_bottom": 0.0727328083967913,
     "drop_top_abs": 0.07273280839679042,
-    "drop_bottom_abs": 1.1102230246251565e-15,
+    "drop_bottom_abs": 0.0,
     "drop_top_rel": 0.9999999999999878,
-    "drop_bottom_rel": 1.5264404731471024e-14,
+    "drop_bottom_rel": 0.0,
     "top_beats_bottom_abs": true,
     "top_equals_bottom_abs": false
   },
@@ -458,23 +457,22 @@
     "property": "entanglement",
     "baseline_metric": 0.07438562443212238,
     "group_scores": {
-      "E": 0.5371928122160612,
-      "M": -0.46280718778393876
+      "E": 0.5371928122160605,
+      "M": -0.46280718778393903
     },
     "top_group": "E",
     "top_groups_tied": [
       "E"
     ],
-    "top_score": 0.5371928122160612,
+    "top_score": 0.5371928122160605,
     "top_is_tie": false,
     "bottom_group": "M",
     "bottom_groups_tied": [
       "M"
     ],
-    "bottom_score": -0.46280718778393876,
+    "bottom_score": -0.46280718778393903,
     "bottom_is_tie": false,
     "removed_top_group_gates": [
-      4,
       5
     ],
     "removed_bottom_group_gates": [
@@ -482,11 +480,11 @@
       1,
       2
     ],
-    "metric_without_top": 0.0,
+    "metric_without_top": 4.440892098500626e-16,
     "metric_without_bottom": 1.0,
-    "drop_top_abs": 0.07438562443212238,
+    "drop_top_abs": 0.07438562443212193,
     "drop_bottom_abs": -0.9256143755678776,
-    "drop_top_rel": 1.0,
+    "drop_top_rel": 0.999999999999994,
     "drop_bottom_rel": -12.443457759940026,
     "top_beats_bottom_abs": true,
     "top_equals_bottom_abs": false
@@ -657,34 +655,32 @@
     "property": "magic",
     "baseline_metric": 2.6645352591003757e-15,
     "group_scores": {
-      "E": 8.881784197001252e-16
+      "E": 0.0
     },
     "top_group": "E",
     "top_groups_tied": [
       "E"
     ],
-    "top_score": 8.881784197001252e-16,
+    "top_score": 0.0,
     "top_is_tie": false,
     "bottom_group": "E",
     "bottom_groups_tied": [
       "E"
     ],
-    "bottom_score": 8.881784197001252e-16,
+    "bottom_score": 0.0,
     "bottom_is_tie": false,
     "removed_top_group_gates": [
-      3,
       6
     ],
     "removed_bottom_group_gates": [
-      3,
       6
     ],
-    "metric_without_top": 1.7763568394002505e-15,
-    "metric_without_bottom": 1.7763568394002505e-15,
-    "drop_top_abs": 8.881784197001252e-16,
-    "drop_bottom_abs": 8.881784197001252e-16,
-    "drop_top_rel": 0.3333333333333333,
-    "drop_bottom_rel": 0.3333333333333333,
+    "metric_without_top": 2.6645352591003757e-15,
+    "metric_without_bottom": 2.6645352591003757e-15,
+    "drop_top_abs": 0.0,
+    "drop_bottom_abs": 0.0,
+    "drop_top_rel": 0.0,
+    "drop_bottom_rel": 0.0,
     "top_beats_bottom_abs": false,
     "top_equals_bottom_abs": true
   },
@@ -694,34 +690,32 @@
     "property": "entanglement",
     "baseline_metric": 0.6666666666666685,
     "group_scores": {
-      "E": 0.6666666666666667
+      "E": 0.6666666666666659
     },
     "top_group": "E",
     "top_groups_tied": [
       "E"
     ],
-    "top_score": 0.6666666666666667,
+    "top_score": 0.6666666666666659,
     "top_is_tie": false,
     "bottom_group": "E",
     "bottom_groups_tied": [
       "E"
     ],
-    "bottom_score": 0.6666666666666667,
+    "bottom_score": 0.6666666666666659,
     "bottom_is_tie": false,
     "removed_top_group_gates": [
-      3,
       6
     ],
     "removed_bottom_group_gates": [
-      3,
       6
     ],
-    "metric_without_top": 1.7763568394002505e-15,
-    "metric_without_bottom": 1.7763568394002505e-15,
-    "drop_top_abs": 0.6666666666666667,
-    "drop_bottom_abs": 0.6666666666666667,
-    "drop_top_rel": 0.9999999999999973,
-    "drop_bottom_rel": 0.9999999999999973,
+    "metric_without_top": 2.6645352591003757e-15,
+    "metric_without_bottom": 2.6645352591003757e-15,
+    "drop_top_abs": 0.6666666666666659,
+    "drop_bottom_abs": 0.6666666666666659,
+    "drop_top_rel": 0.999999999999996,
+    "drop_bottom_rel": 0.999999999999996,
     "top_beats_bottom_abs": false,
     "top_equals_bottom_abs": true
   },
@@ -809,37 +803,36 @@
     "property": "magic",
     "baseline_metric": 0.13317260813013387,
     "group_scores": {
-      "E": 7.401486830834377e-16,
-      "M": -1.4802973661668753e-16,
-      "X": 0.13317260813013326
+      "E": 0.0,
+      "M": -2.2204460492503128e-16,
+      "X": 0.1331726081301332
     },
     "top_group": "X",
     "top_groups_tied": [
       "X"
     ],
-    "top_score": 0.13317260813013326,
+    "top_score": 0.1331726081301332,
     "top_is_tie": false,
     "bottom_group": "E",
     "bottom_groups_tied": [
       "E",
       "M"
     ],
-    "bottom_score": -1.4802973661668753e-16,
+    "bottom_score": -2.2204460492503128e-16,
     "bottom_is_tie": true,
     "removed_top_group_gates": [
       2
     ],
     "removed_bottom_group_gates": [
       3,
-      4,
-      5
+      4
     ],
     "metric_without_top": 4.440892098500626e-16,
-    "metric_without_bottom": 0.13317260813013299,
+    "metric_without_bottom": 0.13317260813013387,
     "drop_top_abs": 0.13317260813013343,
-    "drop_bottom_abs": 8.881784197001252e-16,
+    "drop_bottom_abs": 0.0,
     "drop_top_rel": 0.9999999999999967,
-    "drop_bottom_rel": 6.669377675867197e-15,
+    "drop_bottom_rel": 0.0,
     "top_beats_bottom_abs": true,
     "top_equals_bottom_abs": false
   },
@@ -849,37 +842,36 @@
     "property": "entanglement",
     "baseline_metric": 0.097335223400141,
     "group_scores": {
-      "E": 0.04866761170007079,
-      "M": -1.4802973661668753e-16,
-      "X": 0.04866761170007035
+      "E": 0.04866761170007005,
+      "M": -1.1102230246251564e-16,
+      "X": 0.04866761170007017
     },
     "top_group": "E",
     "top_groups_tied": [
       "E",
       "X"
     ],
-    "top_score": 0.04866761170007079,
+    "top_score": 0.04866761170007017,
     "top_is_tie": true,
     "bottom_group": "M",
     "bottom_groups_tied": [
       "M"
     ],
-    "bottom_score": -1.4802973661668753e-16,
+    "bottom_score": -1.1102230246251564e-16,
     "bottom_is_tie": false,
     "removed_top_group_gates": [
       3,
-      4,
-      5
+      4
     ],
     "removed_bottom_group_gates": [
       0,
       1
     ],
-    "metric_without_top": 0.0,
+    "metric_without_top": 8.881784197001252e-16,
     "metric_without_bottom": 0.097335223400141,
-    "drop_top_abs": 0.097335223400141,
+    "drop_top_abs": 0.09733522340014011,
     "drop_bottom_abs": 0.0,
-    "drop_top_rel": 1.0,
+    "drop_top_rel": 0.9999999999999909,
     "drop_bottom_rel": 0.0,
     "top_beats_bottom_abs": true,
     "top_equals_bottom_abs": false
