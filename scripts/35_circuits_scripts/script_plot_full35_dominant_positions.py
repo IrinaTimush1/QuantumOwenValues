@@ -14,12 +14,14 @@ GROUP_TO_COLOR: Dict[str, str] = {
     "M": "#63B356",
     "E": "#5B8CC7",
     "X": "#F39A32",
+    "NA": "#BDBDBD",
 }
 
 GROUP_TO_LABEL: Dict[str, str] = {
     "M": "Magic coalition",
     "E": "Entanglement coalition",
     "X": "Mix coalition",
+    "NA": "Not applicable",
 }
 
 
@@ -114,6 +116,14 @@ def plot_panel(ax: plt.Axes, df: pd.DataFrame, group_col: str, title: str) -> No
     for _, row in df.iterrows():
         benchmark_id = str(row["benchmark_id"])
         group = normalize_group(row[group_col])
+        # Grey out cases where the value is not applicable:
+        # - Magic-value plot: E4 has only one class present.
+        # - Entanglement-value plot: M1--M5 are magic-axis circuits, so entanglement attribution is not applicable.
+        if group_col == "magic_top_group" and benchmark_id == "E4":
+            group = "NA"
+
+        if group_col == "entanglement_top_group" and benchmark_id in {"M1", "M2", "M3", "M4", "M5"}:
+            group = "NA"
 
         x = int(row["magic_level"])
         y = int(row["entanglement_level"])
@@ -152,7 +162,7 @@ def build_legend_handles():
             markersize=16,
             label=GROUP_TO_LABEL[key],
         )
-        for key in ["M", "E", "X"]
+        for key in ["M", "E", "X", "NA"]
     ]
 
 
