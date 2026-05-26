@@ -17,16 +17,13 @@ What this script does
       - gate-level CSV
       - group-level CSV
       - wide circuit-summary CSV
-4. Produces analysis plots:
-      - 6 full-grid heatmaps (E/M/X for magic and entanglement)
-      - 2 top-group maps (magic / entanglement)
-      - 2 axis trend plots
-      - 2 dominance-margin heatmaps
+4. Produces the thesis Figure 4-style dominant-coalition position plot,
+   with zero-target value cells marked as not applicable.
 5. Writes a small markdown report with the key trend statistics:
       - does M rise along the magic axis?
       - does E rise along the entanglement axis?
       - where does X become important?
-      - which circuits are dominated by each coalition?
+      - which circuits are dominated by each coalition, excluding not-applicable cells?
 
 Notes
 -----
@@ -42,14 +39,14 @@ Notes
 
 Recommended use
 ---------------
-python script_full35_estimated_study.py
-python script_full35_estimated_study.py --n 300 --seed 123
-python script_full35_estimated_study.py --n 300 --repeats 5 --seed 123
+python scripts/benchmark_35/script_full35_estimated_study.py
+python scripts/benchmark_35/script_full35_estimated_study.py --sample-frac 0.7 --seed 123
+python scripts/benchmark_35/script_full35_estimated_study.py --sample-frac 0.7 --repeats 5 --seed 123
 
 If you use repeats > 1:
 - the script reruns the sampled estimator with different seeds
 - then averages the estimated gate Owen values across repeats
-- this gives smoother group trends for the full-grid study
+- this gives smoother group trends for the full 35-circuit study
 """
 
 from __future__ import annotations
@@ -63,7 +60,6 @@ import time
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
@@ -96,9 +92,14 @@ from script_exact_owen_benchmark15 import (  # type: ignore
     load_benchmark_pickle,
     load_summary,
 )
+from script_plot_full35_dominant_positions import (  # type: ignore
+    add_display_top_group_columns,
+    plot_dominant_group_positions,
+)
 
 DEFAULT_GATE_SPEC = ROOT / "data" / "benchmark_35_gate_spec.csv"
 DEFAULT_OUTPUT_DIR = ROOT / "results" / "estimated_full35_frac70"
+DEFAULT_DOMINANT_PLOT = "fig_dominant_group_positions.png"
 
 ENTANGLERS = {"cx", "cz"}
 PARAMETRIC_OR_MAGICISH = {
@@ -110,6 +111,17 @@ PARAMETRIC_OR_MAGICISH = {
 
 PROPERTY_NAMES = ["magic", "entanglement"]
 GROUP_LABELS = ["E", "M", "X"]
+OBSOLETE_PLOT_FILENAMES = (
+    "full35_group_score_heatmaps.png",
+    "full35_group_score_heatmaps.pdf",
+    "full35_top_group_maps.png",
+    "full35_top_group_maps.pdf",
+    "full35_axis_trends.png",
+    "full35_axis_trends.pdf",
+    "full35_dominance_margin_maps.png",
+    "full35_dominance_margin_maps.pdf",
+    "dominant_coalition_positionsnew.png",
+)
 
 
 # ---------------------------------------------------------------------
@@ -181,12 +193,6 @@ def parse_grid_position(benchmark_id: str) -> Tuple[int, int]:
     if benchmark_id.startswith("I"):
         return (int(benchmark_id[1]), int(benchmark_id[2]))
     raise ValueError(f"Unrecognized benchmark id: {benchmark_id}")
-
-
-def grid_labels() -> Tuple[List[str], List[str]]:
-    rows = ["-", "E1", "E2", "E3", "E4", "E5"]
-    cols = ["-", "M1", "M2", "M3", "M4", "M5"]
-    return rows, cols
 
 
 # ---------------------------------------------------------------------
@@ -525,6 +531,8 @@ def spearman_simple(x: Sequence[float], y: Sequence[float]) -> float:
 
 
 def analyze_trends(summary_df: pd.DataFrame) -> str:
+    display_df = add_display_top_group_columns(summary_df)
+
     lines: List[str] = []
     lines.append("# Full 35-circuit estimated Owen study")
     lines.append("")
@@ -550,18 +558,26 @@ def analyze_trends(summary_df: pd.DataFrame) -> str:
     lines.append(f"- Spearman correlation between entanglement-axis position and **Entanglement coalition score for the entanglement value**: **{rho_ent:.4f}**")
     lines.append("")
 
-    # Top-group counts
+    # Top-group counts. Use the same zero-target/not-applicable rule as the
+    # thesis Figure 4 plot so the report and visual agree.
     lines.append("## Dominant coalition counts")
     lines.append("")
-    mg_counts = summary_df["top_group_magic"].value_counts().reindex(GROUP_LABELS, fill_value=0)
-    eg_counts = summary_df["top_group_entanglement"].value_counts().reindex(GROUP_LABELS, fill_value=0)
+    lines.append("Counts exclude circuits whose target value is zero and therefore not applicable.")
+    lines.append("")
+    mg_counts = display_df["display_top_group_magic"].value_counts().reindex(GROUP_LABELS, fill_value=0)
+    eg_counts = display_df["display_top_group_entanglement"].value_counts().reindex(GROUP_LABELS, fill_value=0)
+    mg_na = int((display_df["display_top_group_magic"] == "NA").sum())
+    eg_na = int((display_df["display_top_group_entanglement"] == "NA").sum())
+
     lines.append("### Magic value")
     for g in GROUP_LABELS:
         lines.append(f"- {g}: {int(mg_counts[g])} circuits")
+    lines.append(f"- Not applicable: {mg_na} circuits")
     lines.append("")
     lines.append("### Entanglement value")
     for g in GROUP_LABELS:
         lines.append(f"- {g}: {int(eg_counts[g])} circuits")
+    lines.append(f"- Not applicable: {eg_na} circuits")
     lines.append("")
 
     # Where does X become important?
@@ -598,171 +614,14 @@ def analyze_trends(summary_df: pd.DataFrame) -> str:
 
 
 # ---------------------------------------------------------------------
-# Plots
+# Thesis plot housekeeping
 # ---------------------------------------------------------------------
 
-def _grid_array(summary_df: pd.DataFrame, column: str) -> np.ndarray:
-    arr = np.full((6, 6), np.nan, dtype=float)
-    for _, row in summary_df.iterrows():
-        r = int(row["grid_row"])
-        c = int(row["grid_col"])
-        arr[r, c] = float(row[column])
-    return arr
-
-
-def _top_group_array(summary_df: pd.DataFrame, column: str) -> np.ndarray:
-    mapping = {"E": 0, "M": 1, "X": 2}
-    arr = np.full((6, 6), np.nan, dtype=float)
-    for _, row in summary_df.iterrows():
-        r = int(row["grid_row"])
-        c = int(row["grid_col"])
-        arr[r, c] = mapping.get(str(row[column]), np.nan)
-    return arr
-
-
-def _annotate_grid(ax: plt.Axes, summary_df: pd.DataFrame, text_col: Optional[str] = None, fmt: str = ".2f") -> None:
-    for _, row in summary_df.iterrows():
-        r = int(row["grid_row"])
-        c = int(row["grid_col"])
-        if text_col is None:
-            txt = str(row["benchmark_id"])
-        else:
-            val = row[text_col]
-            txt = f"{row['benchmark_id']}\n{val:{fmt}}"
-        ax.text(c, r, txt, ha="center", va="center", fontsize=8)
-
-
-def plot_full_grid_heatmaps(summary_df: pd.DataFrame, output_dir: Path) -> None:
-    rows, cols = grid_labels()
-
-    fig, axes = plt.subplots(2, 3, figsize=(16, 10))
-    panels = [
-        ("magic_E", "Magic value: E coalition"),
-        ("magic_M", "Magic value: M coalition"),
-        ("magic_X", "Magic value: X coalition"),
-        ("entanglement_E", "Entanglement value: E coalition"),
-        ("entanglement_M", "Entanglement value: M coalition"),
-        ("entanglement_X", "Entanglement value: X coalition"),
-    ]
-
-    for ax, (col_name, title) in zip(axes.flatten(), panels):
-        arr = _grid_array(summary_df, col_name)
-        im = ax.imshow(arr, cmap="viridis", aspect="equal")
-        ax.set_title(title)
-        ax.set_xticks(range(6))
-        ax.set_xticklabels(cols)
-        ax.set_yticks(range(6))
-        ax.set_yticklabels(rows)
-        _annotate_grid(ax, summary_df, text_col=col_name, fmt=".2f")
-        fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-
-    fig.suptitle("Full 35-circuit grid heatmaps (estimated Owen group scores)", fontsize=16)
-    fig.tight_layout()
-    fig.savefig(output_dir / "full35_group_score_heatmaps.png", dpi=300, bbox_inches="tight")
-    fig.savefig(output_dir / "full35_group_score_heatmaps.pdf", bbox_inches="tight")
-    plt.close(fig)
-
-
-def plot_top_group_maps(summary_df: pd.DataFrame, output_dir: Path) -> None:
-    rows, cols = grid_labels()
-    cmap = plt.get_cmap("Set2", 3)
-
-    fig, axes = plt.subplots(1, 2, figsize=(12, 5.5))
-    panels = [
-        ("top_group_magic", "Top group for magic value"),
-        ("top_group_entanglement", "Top group for entanglement value"),
-    ]
-
-    for ax, (col_name, title) in zip(axes, panels):
-        arr = _top_group_array(summary_df, col_name)
-        im = ax.imshow(arr, cmap=cmap, vmin=0, vmax=2, aspect="equal")
-        ax.set_title(title)
-        ax.set_xticks(range(6))
-        ax.set_xticklabels(cols)
-        ax.set_yticks(range(6))
-        ax.set_yticklabels(rows)
-
-        for _, row in summary_df.iterrows():
-            r = int(row["grid_row"])
-            c = int(row["grid_col"])
-            ax.text(c, r, f"{row['benchmark_id']}\n{row[col_name]}", ha="center", va="center", fontsize=8)
-
-    cbar = fig.colorbar(im, ax=axes.ravel().tolist(), ticks=[0, 1, 2], fraction=0.046, pad=0.04)
-    cbar.ax.set_yticklabels(["E", "M", "X"])
-    fig.suptitle("Dominant coalition maps", fontsize=16)
-    fig.tight_layout()
-    fig.savefig(output_dir / "full35_top_group_maps.png", dpi=300, bbox_inches="tight")
-    fig.savefig(output_dir / "full35_top_group_maps.pdf", bbox_inches="tight")
-    plt.close(fig)
-
-
-def plot_axis_trends(summary_df: pd.DataFrame, output_dir: Path) -> None:
-    magic_axis = summary_df.loc[summary_df["benchmark_id"].str.startswith("M")].copy()
-    magic_axis["axis_idx"] = magic_axis["benchmark_id"].str[1:].astype(int)
-    magic_axis = magic_axis.sort_values("axis_idx")
-
-    ent_axis = summary_df.loc[summary_df["benchmark_id"].str.startswith("E")].copy()
-    ent_axis["axis_idx"] = ent_axis["benchmark_id"].str[1:].astype(int)
-    ent_axis = ent_axis.sort_values("axis_idx")
-
-    fig, axes = plt.subplots(1, 2, figsize=(13, 5))
-
-    # magic axis, magic value
-    ax = axes[0]
-    ax.plot(magic_axis["axis_idx"], magic_axis["magic_E"], marker="o", label="E")
-    ax.plot(magic_axis["axis_idx"], magic_axis["magic_M"], marker="o", label="M")
-    ax.plot(magic_axis["axis_idx"], magic_axis["magic_X"], marker="o", label="X")
-    ax.set_title("Magic axis — magic value")
-    ax.set_xlabel("Axis position")
-    ax.set_ylabel("Estimated Owen group score")
-    ax.set_xticks([1, 2, 3, 4, 5])
-    ax.grid(True, alpha=0.25, linestyle="--")
-    ax.legend(frameon=False)
-
-    # ent axis, entanglement value
-    ax = axes[1]
-    ax.plot(ent_axis["axis_idx"], ent_axis["entanglement_E"], marker="o", label="E")
-    ax.plot(ent_axis["axis_idx"], ent_axis["entanglement_M"], marker="o", label="M")
-    ax.plot(ent_axis["axis_idx"], ent_axis["entanglement_X"], marker="o", label="X")
-    ax.set_title("Entanglement axis — entanglement value")
-    ax.set_xlabel("Axis position")
-    ax.set_ylabel("Estimated Owen group score")
-    ax.set_xticks([1, 2, 3, 4, 5])
-    ax.grid(True, alpha=0.25, linestyle="--")
-    ax.legend(frameon=False)
-
-    fig.suptitle("Axis trend plots", fontsize=16)
-    fig.tight_layout()
-    fig.savefig(output_dir / "full35_axis_trends.png", dpi=300, bbox_inches="tight")
-    fig.savefig(output_dir / "full35_axis_trends.pdf", bbox_inches="tight")
-    plt.close(fig)
-
-
-def plot_dominance_margin_maps(summary_df: pd.DataFrame, output_dir: Path) -> None:
-    rows, cols = grid_labels()
-
-    fig, axes = plt.subplots(1, 2, figsize=(12, 5.5))
-    panels = [
-        ("top_margin_magic", "Dominance margin — magic value"),
-        ("top_margin_entanglement", "Dominance margin — entanglement value"),
-    ]
-
-    for ax, (col_name, title) in zip(axes, panels):
-        arr = _grid_array(summary_df, col_name)
-        im = ax.imshow(arr, cmap="magma", aspect="equal")
-        ax.set_title(title)
-        ax.set_xticks(range(6))
-        ax.set_xticklabels(cols)
-        ax.set_yticks(range(6))
-        ax.set_yticklabels(rows)
-        _annotate_grid(ax, summary_df, text_col=col_name, fmt=".2f")
-        fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-
-    fig.suptitle("Dominance-margin heatmaps (top minus second group)", fontsize=16)
-    fig.tight_layout()
-    fig.savefig(output_dir / "full35_dominance_margin_maps.png", dpi=300, bbox_inches="tight")
-    fig.savefig(output_dir / "full35_dominance_margin_maps.pdf", bbox_inches="tight")
-    plt.close(fig)
+def remove_obsolete_plot_files(output_dir: Path) -> None:
+    for filename in OBSOLETE_PLOT_FILENAMES:
+        path = output_dir / filename
+        if path.exists():
+            path.unlink()
 
 
 def load_gate_spec_full_study(
@@ -923,18 +782,18 @@ def main() -> None:
     report_md = args.output_dir / "estimated_full35_trend_report.md"
     report_md.write_text(report_text, encoding="utf-8")
 
-    # Plots
-    plot_full_grid_heatmaps(summary_wide, args.output_dir)
-    plot_top_group_maps(summary_wide, args.output_dir)
-    plot_axis_trends(summary_wide, args.output_dir)
-    plot_dominance_margin_maps(summary_wide, args.output_dir)
+    # Thesis Figure 4 plot. Remove older exploratory plot outputs first so a
+    # rerun leaves only the submission figure in the result directory.
+    remove_obsolete_plot_files(args.output_dir)
+    dominant_plot = args.output_dir / DEFAULT_DOMINANT_PLOT
+    plot_dominant_group_positions(summary_wide, dominant_plot)
 
     print(f"\nSaved raw JSON to: {raw_json}")
     print(f"Saved gate CSV to: {gate_csv}")
     print(f"Saved group CSV to: {group_csv}")
     print(f"Saved circuit summary CSV to: {summary_csv}")
     print(f"Saved trend report to: {report_md}")
-    print(f"Saved plots to: {args.output_dir}")
+    print(f"Saved dominant-position plot to: {dominant_plot}")
     print("\nDone.")
 
 

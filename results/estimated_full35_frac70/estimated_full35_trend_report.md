@@ -11,15 +11,19 @@
 
 ## Dominant coalition counts
 
+Counts exclude circuits whose target value is zero and therefore not applicable.
+
 ### Magic value
-- E: 2 circuits
+- E: 1 circuits
 - M: 26 circuits
 - X: 7 circuits
+- Not applicable: 1 circuits
 
 ### Entanglement value
-- E: 25 circuits
-- M: 8 circuits
+- E: 24 circuits
+- M: 4 circuits
 - X: 2 circuits
+- Not applicable: 5 circuits
 
 ## Where does Mix (X) become important?
 

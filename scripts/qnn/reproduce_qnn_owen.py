@@ -9,9 +9,9 @@ What this script does
 ---------------------
 - Builds the 19-gate 2-qubit QNN from paper Figure 12.
 - Uses the same active/passive setup as the paper QNN experiment:
-    active players A = {2, 4, 5, ..., 19} in paper 1-based indexing
-    locked/passive R = {1, 3} in paper 1-based indexing
-  In Python/Qiskit 0-based indexing, locked gates are [0, 2].
+    active players A = {2, 4, 5, 6, 7, 9, 11, ..., 19} in paper 1-based indexing
+    locked/passive R = {1, 3, 8, 10} in paper 1-based indexing
+  In Python/Qiskit 0-based indexing, locked gates are [0, 2, 7, 9].
 - Uses the paper theta by default:
     theta ~= (3.860, -1.070, -1.583, 0.860)
 - Uses one-shot test accuracy as the value function:
@@ -29,8 +29,7 @@ What this script does
 This script uses a motif-based physical E/M/X coalition structure:
 
 E = Entanglement coalition:
-    active Hadamard gates treated as entanglement-preparing Clifford scaffold
-    together with the CNOT/CZ layer.
+    CNOT/CZ layer, with the locked Hadamard gates kept in the fixed scaffold.
 
 M = Magic coalition:
     local non-Clifford single-qubit feature/readout rotations whose primary
@@ -42,7 +41,7 @@ X = Mix coalition:
     preparing the final classifier CNOT.
 
 For the paper QNN active gates, this gives the following paper 1-based groups:
-    E: [5, 7, 8, 10, 12, 14, 17]
+    E: [5, 7, 12, 14, 17]
     M: [2, 4, 9, 11, 18, 19]
     X: [6, 13, 15, 16]
 
@@ -90,10 +89,12 @@ import matplotlib.pyplot as plt
 PAPER_THETA = np.array([3.860, -1.070, -1.583, 0.860], dtype=float)
 
 # Paper gate numbers are 1-based. Qiskit instruction indices are 0-based.
-PAPER_LOCKED_GATES_1_BASED = [1, 3]
+PAPER_LOCKED_GATES_1_BASED = [1, 3, 8, 10]
 PAPER_LOCKED_INSTRUCTIONS_0_BASED = [g - 1 for g in PAPER_LOCKED_GATES_1_BASED]
 
-PAPER_ACTIVE_GATES_1_BASED = [2] + list(range(4, 20))
+PAPER_ACTIVE_GATES_1_BASED = [
+    g for g in range(1, 20) if g not in PAPER_LOCKED_GATES_1_BASED
+]
 PAPER_ACTIVE_INSTRUCTIONS_0_BASED = [g - 1 for g in PAPER_ACTIVE_GATES_1_BASED]
 
 PAPER_GATE_NAMES_1_BASED = {
@@ -106,13 +107,13 @@ FEATURE_PARAM_NAMES = [f"feat_p{i}" for i in range(6)]
 THETA_PARAM_NAMES = [f"theta_{i}" for i in range(4)]
 
 # E/M/X partition, paper 1-based indices.
-# E: active H gates treated as entanglement-preparing scaffold plus CX/CZ layer.
+# E: entangling CX/CZ layer, with passive H gates kept in the fixed scaffold.
 # M: local non-Clifford feature/readout rotations with primarily single-qubit role.
 # X: local non-Clifford rotations embedded in entangling motifs:
 #    cross-feature phase gates inside CX-P-CX sandwiches and trainable RY gates
 #    immediately preparing the final classifier CNOT.
 EMX_PARTITION_1_BASED: Dict[str, List[int]] = {
-    "E": [5, 7, 8, 10, 12, 14, 17],
+    "E": [5, 7, 12, 14, 17],
     "M": [2, 4, 9, 11, 18, 19],
     "X": [6, 13, 15, 16],
 }
@@ -947,7 +948,7 @@ def save_config(args: argparse.Namespace, theta: Sequence[float], output_dir: Pa
         "partition_1_based": EMX_PARTITION_1_BASED,
         "partition_0_based": EMX_PARTITION_0_BASED,
         "partition_semantics": {
-            "E": "active H gates treated as entanglement-preparing Clifford scaffold plus the CX/CZ layer",
+            "E": "entangling CX/CZ layer, with passive H gates kept in the fixed scaffold",
             "M": "local non-Clifford feature/readout rotations with primarily single-qubit role",
             "X": "local non-Clifford rotations embedded in entangling motifs: cross-feature CX-P-CX phases and classifier-preparing RY gates",
         },

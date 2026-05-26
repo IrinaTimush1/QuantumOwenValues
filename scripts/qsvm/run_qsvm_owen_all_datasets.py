@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
-"""Run exact QSVM Owen experiments for all five downloaded datasets."""
+"""
+Run the thesis QSVM E/M/X Owen experiment.
+
+This is the canonical QSVM runner for Fig. 6 and Tables XI-XIII. It evaluates
+the exact Owen values for every requested dataset split and repetition depth r,
+writing one result folder per `(dataset, r)` pair under
+`results/qsvm_owen_all_datasets/`.
+
+Use `--data-indices` and `--r-values` for targeted smoke tests. The default
+matches the thesis: five dataset splits and r in {1, 2, 3}.
+"""
 
 from __future__ import annotations
 

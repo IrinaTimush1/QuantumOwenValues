@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Aggregate QSVM Owen outputs over the five local datasets."""
+"""
+Aggregate the thesis QSVM Owen outputs over the five dataset splits.
+
+Run this after `run_qsvm_owen_all_datasets.py`. It reads the per-dataset,
+per-r CSV files and writes aggregate mean/std tables and auxiliary plots under
+`results/qsvm_owen_all_datasets/aggregate/`.
+"""
 
 from __future__ import annotations
 

@@ -13,9 +13,10 @@ Run scripts from the repository root after `pip install -e .`.
 - `script_plot_estimator_validation.py` - paper-style estimator-validation
   plots.
 - `script_full35_estimated_study.py` - sampled Owen values for all 35 benchmark
-  circuits at the thesis sampling fraction.
-- `script_plot_full35_study.py` - auxiliary full-35 paper-style plots.
-- `script_plot_full35_dominant_positions.py` - dominant group map for Fig. 4.
+  circuits and the thesis Fig. 4 dominant-coalition map.
+- `script_plot_full35_study.py` - auxiliary full-35 exploratory plots.
+- `script_plot_full35_dominant_positions.py` - standalone re-renderer for the
+  Fig. 4 dominant-coalition map.
 
 ## `qnn/`
 
@@ -29,15 +30,12 @@ Run scripts from the repository root after `pip install -e .`.
 
 - `qsvm_experiment_utils.py` - shared QSVM data, circuit, Owen, aggregation,
   and plotting helpers.
-- `qsvm_owen_r1_exact.py`, `qsvm_owen_r2_exact.py`,
-  `qsvm_owen_r3_exact.py` - thin exact-Owen entry points for individual
-  repetitions.
 - `run_qsvm_owen_all_datasets.py` - main multi-dataset QSVM runner.
 - `aggregate_qsvm_owen_all_datasets.py` - aggregate QSVM outputs across the
   five splits.
-- `plot_qsvm_owen_summary.py` - auxiliary QSVM summary plotting.
 - `plot_qsvm_paper_style.py` - paper-style QSVM figures and statistics.
 - `reproduce_qsvm_accuracies.py` - full-circuit QSVM accuracy check.
+- `README.md` - QSVM-specific workflow notes and output layout.
 
 ## `tests/`
 

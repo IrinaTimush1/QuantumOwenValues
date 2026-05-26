@@ -79,8 +79,10 @@ python scripts/benchmark_35/script_plot_estimator_validation.py
 ```bash
 python scripts/benchmark_35/script_full35_estimated_study.py \
     --sample-frac 0.7 --repeats 5
-python scripts/benchmark_35/script_plot_full35_dominant_positions.py
 ```
+
+This writes the thesis Fig. 4 dominant-coalition plot directly to
+`results/estimated_full35_frac70/fig_dominant_group_positions.png`.
 
 ### Fig. 5, Fig. 8, Fig. 9, Table VIII - QNN E/M/X
 
@@ -106,8 +108,10 @@ python scripts/qnn/reproduce_qnn_owen_multiple_partitions.py \
 ```bash
 python scripts/qsvm/run_qsvm_owen_all_datasets.py \
     --data-dir data --output-dir results/qsvm_owen_all_datasets
-python scripts/qsvm/aggregate_qsvm_owen_all_datasets.py
-python scripts/qsvm/plot_qsvm_paper_style.py
+python scripts/qsvm/aggregate_qsvm_owen_all_datasets.py \
+    --output-dir results/qsvm_owen_all_datasets
+python scripts/qsvm/plot_qsvm_paper_style.py \
+    --results-dir results/qsvm_owen_all_datasets
 ```
 
 ### SVQX baseline
