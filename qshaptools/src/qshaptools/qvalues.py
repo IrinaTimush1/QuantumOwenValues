@@ -49,7 +49,7 @@ def value_H(qc_data, num_qubits, S, quantum_instance, H):
                     if basis[i] == 'I':
                         basis[i] = p
                     elif basis[i] != p:
-                        raise ValueError('PauliSumOp contains non-commuting terms!')
+                        raise ValueError(' contains non-commuting terms!')
         new_qc = qc.copy()
         for i, pauli in enumerate(basis):
             if pauli == 'X':  # H @ X @ H = Z

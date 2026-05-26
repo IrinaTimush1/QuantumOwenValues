@@ -171,13 +171,9 @@ class ShapleyValues():
         else:
             Si_effective_total_list = self.Si_total_list_
         if self._shap_batch_size is not None:
-            # Coalition entries have variable-length S lists. Newer NumPy
-            # versions reject coercing this ragged structure before splitting,
-            # so use plain list chunks instead.
-            Si_effective_total_list = [
-                Si_effective_total_list[i:i + self._shap_batch_size]
-                for i in range(0, len(Si_effective_total_list), self._shap_batch_size)
-            ]
+            Si_effective_total_list = [Si_batch_list.tolist() for Si_batch_list in
+                                       np.array_split(Si_effective_total_list,
+                                                      np.ceil(len(Si_effective_total_list) / self._shap_batch_size))]
         total = sum([len(Si_batch_list) for Si_batch_list in
                      Si_effective_total_list]) if self._shap_batch_size is not None else len(Si_effective_total_list)
         with tqdm(desc=f'{self.name}:eval', total=total, disable=self._silent) as prog:

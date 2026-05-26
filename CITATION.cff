@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: "OVQX - Owen Values for Quantum Circuit Explanations"
+authors:
+  - family-names: Timus
+    given-names: Irina
+    affiliation: Maastricht University
+version: 0.1.0
+date-released: 2026-05-26
+license: MIT
+url: "https://github.com/IrinaTimush1/OVQX"

@@ -10,8 +10,8 @@
   "alpha": 0.01,
   "base_seed": 123,
   "n_jobs": 5,
-  "data_path": "/Users/iratimush/xqml-thesis/data/qnn-data.csv",
-  "output_dir": "/Users/iratimush/xqml-thesis/results/qnn_svqx",
+  "data_path": "data/qnn-data.csv",
+  "output_dir": "results/qnn_svqx",
   "use_paper_theta": true,
   "train": false,
   "theta": [

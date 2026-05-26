@@ -14,8 +14,8 @@
   "alpha_note": "alpha=1.0 evaluates the full structured Owen coalition space for these small partitions; K still averages shot noise.",
   "base_seed": 123,
   "n_jobs": 5,
-  "data_path": "/Users/iratimush/xqml-thesis/data/qnn-data.csv",
-  "output_dir": "/Users/iratimush/xqml-thesis/results/qnn_owen_partitions/architecture",
+  "data_path": "data/qnn-data.csv",
+  "output_dir": "results/qnn_owen_partitions/architecture",
   "use_paper_theta": true,
   "train": false,
   "theta": [

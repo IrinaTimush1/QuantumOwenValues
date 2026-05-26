@@ -1,3 +1,7 @@
+# uowen.py - Uncertain Owen Values
+# Part of OVQX (https://github.com/IrinaTimush1/OVQX), accompanying the B.Sc.
+# thesis "Group-Structured Attributions for Explainable Quantum Machine
+# Learning" by Irina Timus (Maastricht University, 2026). MIT-licensed.
 """
 Owen Values for Quantum Circuit Explanations (OVQXs)
 

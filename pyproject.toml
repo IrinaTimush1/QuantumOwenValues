@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ovqx"
+version = "0.1.0"
+description = "Owen Value Quantum eXplanations - group-structured attributions for quantum circuits (Bachelor's thesis code, Maastricht University, 2026)"
+authors = [{name = "Irina Timus"}]
+readme = "README.md"
+requires-python = ">=3.10"
+
+[tool.setuptools.packages.find]
+where = ["qshaptools/src"]

@@ -1,3 +1,7 @@
+# partition_util.py - Partition helpers for Owen values
+# Part of OVQX (https://github.com/IrinaTimush1/OVQX), accompanying the B.Sc.
+# thesis "Group-Structured Attributions for Explainable Quantum Machine
+# Learning" by Irina Timus (Maastricht University, 2026). MIT-licensed.
 """
 partition_utils.py — Utilities for defining Owen-value partitions
 ==================================================================

@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.Python
+build/
+dist/
+
+# Environments
+.venv/
+venv/
+env/
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Local results not meant for the repo
+# (kept results live under results/ and are tracked explicitly)
+*.tmp
+*.bak
