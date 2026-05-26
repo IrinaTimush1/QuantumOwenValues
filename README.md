@@ -34,7 +34,7 @@ OVQX/
 ## Installation
 
 ```bash
-git clone https://github.com/IrinaTimush1/OVQX.git
+git clone https://github.com/IrinaTimush1/QuantumOwenValues.git
 cd OVQX
 python -m venv .venv
 source .venv/bin/activate
