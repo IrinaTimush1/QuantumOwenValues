@@ -1,0 +1,127 @@
+{
+  "active_gates": [
+    2,
+    4,
+    5,
+    6,
+    7,
+    9,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "passive_gates": [
+    1,
+    3,
+    8,
+    10
+  ],
+  "baseline": "locked-passive Shapley baseline matching the QNN E/M/X Owen game",
+  "theta": [
+    3.86,
+    -1.07,
+    -1.583,
+    0.86
+  ],
+  "K": 32,
+  "alpha": 0.01,
+  "num_runs": 5,
+  "full_circuit_accuracy": {
+    "heese_reference": 0.8,
+    "threshold_accuracy": 0.8,
+    "expected_one_shot_accuracy": 0.6030203884503662,
+    "sampled_one_shot_mean": 0.61125,
+    "sampled_one_shot_std": 0.09803538901845597,
+    "sanity_trials": 200,
+    "match": true
+  },
+  "runtime_seconds": 69.21224808692932,
+  "runs": [
+    {
+      "run": 0,
+      "seed": 0,
+      "runtime_seconds": 13.420969009399414,
+      "stats": {
+        "n_players": 15,
+        "alpha": 0.01,
+        "k_repetitions": 32,
+        "contexts_per_player": 164,
+        "exact": false,
+        "seed": 0,
+        "unique_value_evaluations": 102528,
+        "cached_mean_values": 3204
+      },
+      "cache_size": 3204
+    },
+    {
+      "run": 1,
+      "seed": 1,
+      "runtime_seconds": 13.416379928588867,
+      "stats": {
+        "n_players": 15,
+        "alpha": 0.01,
+        "k_repetitions": 32,
+        "contexts_per_player": 164,
+        "exact": false,
+        "seed": 1,
+        "unique_value_evaluations": 100928,
+        "cached_mean_values": 3154
+      },
+      "cache_size": 3154
+    },
+    {
+      "run": 2,
+      "seed": 2,
+      "runtime_seconds": 13.857319116592407,
+      "stats": {
+        "n_players": 15,
+        "alpha": 0.01,
+        "k_repetitions": 32,
+        "contexts_per_player": 164,
+        "exact": false,
+        "seed": 2,
+        "unique_value_evaluations": 101888,
+        "cached_mean_values": 3184
+      },
+      "cache_size": 3184
+    },
+    {
+      "run": 3,
+      "seed": 3,
+      "runtime_seconds": 14.308765888214111,
+      "stats": {
+        "n_players": 15,
+        "alpha": 0.01,
+        "k_repetitions": 32,
+        "contexts_per_player": 164,
+        "exact": false,
+        "seed": 3,
+        "unique_value_evaluations": 104192,
+        "cached_mean_values": 3256
+      },
+      "cache_size": 3256
+    },
+    {
+      "run": 4,
+      "seed": 4,
+      "runtime_seconds": 14.128328800201416,
+      "stats": {
+        "n_players": 15,
+        "alpha": 0.01,
+        "k_repetitions": 32,
+        "contexts_per_player": 164,
+        "exact": false,
+        "seed": 4,
+        "unique_value_evaluations": 102368,
+        "cached_mean_values": 3199
+      },
+      "cache_size": 3199
+    }
+  ]
+}
