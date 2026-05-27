@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Owen Value Quantum eXplanations - group-structured attributions for quantum circuits (Bachelor's thesis code, Maastricht University, 2026)"
 authors = [{name = "Irina Timus"}]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11,<3.13"
 
 [tool.setuptools.packages.find]
 where = ["qshaptools/src"]

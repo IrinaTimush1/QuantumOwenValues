@@ -35,15 +35,17 @@ OVQX/
 
 ```bash
 git clone https://github.com/IrinaTimush1/QuantumOwenValues.git
-cd OVQX
-python -m venv .venv
+cd QuantumOwenValues
+python3.12 -m venv .venv
 source .venv/bin/activate
+export PYTHONPATH="$PWD/qshaptools/src:$PWD/qshaptools/src/qshaptools:$PYTHONPATH"
 pip install -r requirements.txt
 pip install -e .
 ```
 
 The pinned environment uses Qiskit 0.46 APIs such as `Aer` and
 `QuantumInstance`; Qiskit 1.0 or newer is not compatible with these scripts.
+Use Python 3.12 for the submitted environment.
 
 ## Reproducing the thesis figures
 
@@ -138,9 +140,14 @@ convergence on small deterministic games.
 ## Runtime expectations
 
 The committed `results/` directory contains the pruned outputs used in the
-thesis. The unit tests run quickly. The full 35-circuit, QNN, and QSVM
-reproduction commands are computational experiments and can take from minutes
-to several hours depending on CPU, simulator, and parallelism settings.
+thesis. Approximate runtimes on a 2026 Apple Silicon laptop are:
+
+- Quick tests: under 2 minutes.
+- QNN E/M/X reproduction (`K=1,8,16,32`, 5 runs, `n_jobs=5`): about 8 minutes.
+- QSVM full reproduction over five dataset splits and `r=1,2,3`: about 5-15 minutes depending on cache state.
+- Full 35-circuit estimated study (`sample_frac=0.7`, 5 repeats): about 1.5-2 hours.
+
+Exact timings vary with CPU, simulator version, and parallelism settings.
 
 ## License and attribution
 
