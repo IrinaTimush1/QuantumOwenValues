@@ -68,6 +68,16 @@ python scripts/benchmark_35/script_exact_owen_benchmark15.py
 python scripts/benchmark_35/script_faithfulness_ablation_benchmark15.py
 ```
 
+### Random partition control
+
+```bash
+python scripts/benchmark_35/script_random_partition_control_benchmark15.py \
+    --n-random 100 --seed 12345
+```
+
+This writes generic dominance/faithfulness metrics and label-aware
+resource-alignment controls to `results/random_partition_control_15/`.
+
 ### Fig. 3, Table VII - Estimator validation
 
 ```bash

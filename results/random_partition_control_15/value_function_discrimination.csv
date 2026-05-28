@@ -1,0 +1,16 @@
+benchmark_id,family_role,emx_top_magic_group,emx_top_entanglement_group,emx_switch,random_switch_rate,n_random,skip_reason
+M1,magic_axis,X,M,1.0,0.9,100,
+M2,magic_axis,M,M,0.0,0.72,100,
+M3,magic_axis,,,,,0,fewer than two non-empty active E/M/X groups
+M4,magic_axis,M,M,0.0,0.46,100,
+M5,magic_axis,M,X,1.0,0.73,100,
+E1,entanglement_axis,M,E,1.0,0.3,100,
+E2,entanglement_axis,M,M,0.0,0.48,100,
+E3,entanglement_axis,X,X,0.0,0.34,100,
+E4,entanglement_axis,,,,,0,fewer than two non-empty active E/M/X groups
+E5,entanglement_axis,M,E,1.0,0.43,100,
+I11,interior,X,X,0.0,0.07,100,
+I15,interior,X,E,1.0,0.29,100,
+I33,interior,M,X,1.0,0.65,100,
+I51,interior,M,E,1.0,0.45,100,
+I55,interior,M,M,0.0,0.37,100,
