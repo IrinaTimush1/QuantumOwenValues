@@ -126,6 +126,18 @@ python scripts/qsvm/plot_qsvm_paper_style.py \
     --results-dir results/qsvm_owen_all_datasets
 ```
 
+### QSVM alternative partitions
+
+```bash
+python scripts/qsvm/run_qsvm_owen_alternative_partitions.py \
+    --data-dir data \
+    --output-dir results/qsvm_owen_alternative_partitions \
+    --r-values 1 2 3
+```
+
+This writes appendix-ready comparisons for `feature_semantics` (F1/F2/F12)
+and `repetition_blocks` (B1/B2/B3).
+
 ### SVQX baseline
 
 ```bash

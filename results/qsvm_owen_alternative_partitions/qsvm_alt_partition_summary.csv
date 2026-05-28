@@ -1,0 +1,7 @@
+partition_name,r,n_groups,dominant_group_by_signed_mean,dominant_group_by_abs_mean,dominance_gap_abs,dominance_gap_norm,interpretation_short,skip_reason
+feature_semantics,1,3,F2,F2,0.07899999999999997,0.2831541218627843,feature x2 local phase gates have the largest mean absolute contribution,
+feature_semantics,2,3,F2,F2,0.04659999999999995,0.094103392568469,feature x2 local phase gates have the largest mean absolute contribution,
+feature_semantics,3,3,F2,F2,0.02730000000000006,0.07954545454522295,feature x2 local phase gates have the largest mean absolute contribution,
+repetition_blocks,1,1,B1,B1,,,only one active repetition block is available,single active group; dominance comparison is not meaningful
+repetition_blocks,2,2,B1,B1,0.279,0.563408723746843,repetition block 1 has the largest mean absolute contribution,
+repetition_blocks,3,3,B1,B1,0.10809999999999999,0.31497668997577216,repetition block 1 has the largest mean absolute contribution,

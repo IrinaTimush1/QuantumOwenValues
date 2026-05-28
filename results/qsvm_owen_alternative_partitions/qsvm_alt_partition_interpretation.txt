@@ -1,0 +1,14 @@
+QSVM alternative partition interpretation
+=============================================
+
+Feature-semantics partition:
+r=1: dominant group = F2; shares: F1=0.201, F12=0.255, F2=0.545. This suggests that local single-feature encoding of x2 contributes strongly.
+r=2: dominant group = F2; shares: F1=0.340, F12=0.283, F2=0.377. This suggests that local single-feature encoding of x2 contributes strongly.
+r=3: dominant group = F2; shares: F1=0.314, F12=0.294, F2=0.393. This suggests that local single-feature encoding of x2 contributes strongly.
+
+Repetition-block partition:
+r=1: only one active block, group comparison not meaningful; shares: B1=1.000. For r=1 the block partition is degenerate because only one active block exists.
+r=2: dominant block = B1; shares: B1=0.782, B2=0.218. This suggests that the first repetition carries most of the attribution.
+r=3: dominant block = B1; shares: B1=0.494, B2=0.331, B3=0.175. This suggests that the first repetition carries most of the attribution.
+
+These summaries are descriptive controls and should be interpreted alongside the main E/M/X QSVM analysis.

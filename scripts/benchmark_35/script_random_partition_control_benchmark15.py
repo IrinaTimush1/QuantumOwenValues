@@ -51,6 +51,7 @@ OUTPUT_DIR = ROOT / "results" / "random_partition_control_15"
 VALUE_FUNCTIONS = ("magic", "entanglement")
 EPS = 1e-12
 GROUP_ORDER = ("E", "M", "X")
+ZERO_TARGET_TOL = 1e-10
 
 
 @dataclass
@@ -346,10 +347,17 @@ def compute_partition_metrics(
     )
     expected_drop = np.nan
     expected_drop_norm = np.nan
+    zero_target_skip = (
+        value_function == "entanglement"
+        and abs(float(full_value)) <= ZERO_TARGET_TOL
+    )
     if not include_label_aware_metrics:
         expected_skip = "label-aware metrics disabled"
         resource_alignment = np.nan
         expected_gates = []
+    elif zero_target_skip:
+        expected_skip = "zero full entanglement target; label-aware metric not applicable"
+        resource_alignment = np.nan
     elif not expected_skip:
         keep_without_expected = sorted((active_set - set(expected_gates)) | locked_set)
         value_without_expected = cached_value_fun.value_for_indices(keep_without_expected)
