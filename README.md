@@ -10,24 +10,35 @@ Supervisors: Menica Dibenedetto and Tjitze Rienstra.
 
 OVQX extends the SVQX framework of Heese et al. from gate-level Shapley
 attributions to group-structured Owen attributions over predefined gate
-partitions. The repository reproduces the controlled 35-circuit benchmark, the
-15-circuit exact Owen study and faithfulness ablation, the Monte Carlo estimator
-validation, the full 35-circuit estimated study, and the QNN/QSVM case studies.
+partitions. The repository reproduces:
+
+- the controlled 35-circuit benchmark (Fig. 1) and the 15-circuit exact Owen
+  study with group-ablation support (Table I, Fig. 2, Table II);
+- the label-aware random-partition control (Tables VII-VIII);
+- the Monte Carlo estimator validation (Fig. 6, Table IX) and the full
+  35-circuit estimated study (Fig. 3);
+- the QNN case study with E/M/X and alternative partitions (Fig. 4, Figs 8-9,
+  Tables X, XII, XIII);
+- the QSVM case study with E/M/X and alternative partitions (Fig. 5,
+  Tables XIV-XVI, Table XVII);
+- the locked-passive Shapley comparison used in Appendix A-G (Table XI,
+  Figs 10-13).
 
 The thesis PDF is included as `thesis.pdf`.
 
 ## Repository layout
 
 ```text
-OVQX/
-├── qshaptools/        # upstream qshaptools plus OVQX Owen extensions
-├── data/              # input CSV/PKL data only
+QuantumOwenValues/
+├── qshaptools/                # upstream qshaptools plus OVQX Owen extensions
+├── data/                      # input CSV/PKL data only
 ├── scripts/
-│   ├── benchmark_35/  # 35-circuit benchmark, estimator, faithfulness scripts
-│   ├── qnn/           # QNN Owen, alternative partitions, and SVQX baseline
-│   ├── qsvm/          # QSVM Owen runners, aggregation, and plots
-│   └── tests/         # Owen-value verification scripts
-├── results/           # pruned thesis outputs and figures
+│   ├── benchmark_35/          # 35-circuit benchmark, estimator, ablation, random-partition control
+│   ├── qnn/                   # QNN Owen, alternative partitions, and SVQX baseline
+│   ├── qsvm/                  # QSVM Owen runners, alternative partitions, aggregation, plots
+│   └── tests/                 # Owen-value verification scripts
+├── shapley_reproduction/      # locked-passive Shapley baseline for Owen-vs-Shapley comparison
+├── results/                   # pruned thesis outputs and figures
 └── thesis.pdf
 ```
 
@@ -61,14 +72,18 @@ The selected benchmark is stored in `data/benchmark_35_from_pool.pkl` and
 results/benchmark_35/benchmark_35_normalized.png
 ```
 
-### Table I, Fig. 2, Table II - 15-circuit exact Owen and faithfulness
+### Table I, Fig. 2, Table II - 15-circuit exact Owen and group ablation
 
 ```bash
 python scripts/benchmark_35/script_exact_owen_benchmark15.py
 python scripts/benchmark_35/script_faithfulness_ablation_benchmark15.py
 ```
 
-### Random partition control
+The second filename retains the earlier `faithfulness_ablation` name for
+backward compatibility; thesis Section V-B calls this experiment
+"Group-Ablation Support".
+
+### Tables VII-VIII, Appendix A-B - Label-aware random-partition control
 
 ```bash
 python scripts/benchmark_35/script_random_partition_control_benchmark15.py \
@@ -77,8 +92,11 @@ python scripts/benchmark_35/script_random_partition_control_benchmark15.py \
 
 This writes generic dominance/faithfulness metrics and label-aware
 resource-alignment controls to `results/random_partition_control_15/`.
+Tables VII-VIII use the `random_control_summary.csv` rows for
+`magic/resource_alignment`, `magic/expected_drop_norm`,
+`entanglement/resource_alignment`, and `entanglement/expected_drop_norm`.
 
-### Fig. 3, Table VII - Estimator validation
+### Fig. 6, Table IX, Appendix A-C - Monte Carlo estimator validation
 
 ```bash
 python scripts/benchmark_35/script_estimator_validation_benchmark15.py \
@@ -86,17 +104,17 @@ python scripts/benchmark_35/script_estimator_validation_benchmark15.py \
 python scripts/benchmark_35/script_plot_estimator_validation.py
 ```
 
-### Fig. 4 - Full 35-circuit estimated Owen
+### Fig. 3 - Full 35-circuit estimated Owen
 
 ```bash
 python scripts/benchmark_35/script_full35_estimated_study.py \
     --sample-frac 0.7 --repeats 5
 ```
 
-This writes the thesis Fig. 4 dominant-coalition plot directly to
+This writes the thesis Fig. 3 dominant-coalition plot directly to
 `results/estimated_full35_frac70/fig_dominant_group_positions.png`.
 
-### Fig. 5, Fig. 8, Fig. 9, Table VIII - QNN E/M/X
+### Fig. 4, Fig. 8, Fig. 9, Table X - QNN E/M/X
 
 ```bash
 python scripts/qnn/reproduce_qnn_owen.py \
@@ -106,7 +124,10 @@ python scripts/qnn/reproduce_qnn_owen.py \
     --output-dir results/qnn_owen_emx_main
 ```
 
-### Table X - Alternative QNN partitions
+This command produces the QNN main bar chart, K-comparison, gate-level figure,
+and Table X outputs.
+
+### Tables XII-XIII, Appendix A-H - Alternative QNN partitions
 
 ```bash
 python scripts/qnn/reproduce_qnn_owen_multiple_partitions.py \
@@ -115,7 +136,7 @@ python scripts/qnn/reproduce_qnn_owen_multiple_partitions.py \
     --output-dir results/qnn_owen_partitions
 ```
 
-### Fig. 6, Tables XI-XIII - QSVM E/M/X
+### Fig. 5, Tables XIV-XVI - QSVM E/M/X
 
 ```bash
 python scripts/qsvm/run_qsvm_owen_all_datasets.py \
@@ -126,7 +147,7 @@ python scripts/qsvm/plot_qsvm_paper_style.py \
     --results-dir results/qsvm_owen_all_datasets
 ```
 
-### QSVM alternative partitions
+### Table XVII, Appendix A-K - Alternative QSVM partitions
 
 ```bash
 python scripts/qsvm/run_qsvm_owen_alternative_partitions.py \
@@ -138,7 +159,20 @@ python scripts/qsvm/run_qsvm_owen_alternative_partitions.py \
 This writes appendix-ready comparisons for `feature_semantics` (F1/F2/F12)
 and `repetition_blocks` (B1/B2/B3).
 
-### SVQX baseline
+### Table XI, Figs 10-13, Appendix A-G - Locked-passive Shapley comparison
+
+```bash
+python shapley_reproduction/run_qnn_shapley.py
+python shapley_reproduction/run_qsvm_shapley.py
+python shapley_reproduction/compare_owen_vs_shapley.py
+```
+
+These commands write to `shapley_reproduction/results/`. The comparison script
+produces Table XI and Figs 10-13. This folder is intentionally separate because
+the standalone Shapley estimator does not import from the Owen modules, as
+documented in `shapley_reproduction/README.md`.
+
+### SVQX baseline (Discussion Section VI)
 
 ```bash
 python scripts/qnn/reproduce_qnn_svqx.py \

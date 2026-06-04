@@ -2,7 +2,10 @@
 """
 script_faithfulness_ablation_benchmark15.py
 
-Faithfulness-by-ablation experiment for the 15-circuit exact-Owen benchmark.
+Group-ablation support experiment for the 15-circuit exact-Owen benchmark.
+The script filename retains the earlier "faithfulness ablation" naming; the
+underlying experiment is the Section V-B "Group-Ablation Support" check from
+the thesis.
 
 This script reuses the same 15 circuits, the same gate-spec CSV, and the same
 value functions as script_exact_owen_benchmark15.py.
@@ -263,7 +266,7 @@ def plot_paired_drops(df_prop: pd.DataFrame, property_name: str, out_path: Path)
     ax.set_xticks(x)
     ax.set_xticklabels(plot_df["benchmark_id"], rotation=45, ha="right")
     ax.set_ylabel("metric drop (baseline - ablated)")
-    ax.set_title(f"Faithfulness by ablation: {property_name}")
+    ax.set_title(f"Group-ablation support: {property_name}")
     ax.legend()
     fig.tight_layout()
     fig.savefig(out_path, dpi=200)

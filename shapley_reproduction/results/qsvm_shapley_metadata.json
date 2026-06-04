@@ -1,7 +1,7 @@
 {
   "data_index": 0,
-  "train_path": "/Users/iratimush/xqml-thesis/data/qsvm-traindata-0.csv",
-  "test_path": "/Users/iratimush/xqml-thesis/data/qsvm-testdata-0.csv",
+  "train_path": "data/qsvm-traindata-0.csv",
+  "test_path": "data/qsvm-testdata-0.csv",
   "runs": [
     {
       "r": 1,

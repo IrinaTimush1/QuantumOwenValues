@@ -131,3 +131,9 @@ Saved run summary to /tmp/qsvm_smoke/all_run_summaries.csv
 ```
 
 All commands exited with status 0.
+
+Additional smoke checks also completed successfully in the submitted
+environment:
+
+- Random-partition control smoke: `python scripts/benchmark_35/script_random_partition_control_benchmark15.py --n-random 3 --seed 1 --benchmark-ids M1 I11`
+- QSVM alternative-partition smoke: `python scripts/qsvm/run_qsvm_owen_alternative_partitions.py --data-dir data --output-dir /tmp/qsvm_alt_smoke --r-values 1 --dataset-indices 0`
