@@ -44,6 +44,24 @@ QuantumOwenValues/
 
 ## Installation
 
+The GitHub repository for this thesis artifact is private. Examiners do not
+need GitHub access if they receive the submitted ZIP archive; all code, input
+data, pruned result files, and the thesis PDF are included in the archive.
+
+### From the submitted ZIP archive
+
+```bash
+unzip QuantumOwenValues.zip
+cd QuantumOwenValues          # or the extracted folder name, e.g. QuantumOwenValues-main
+python3.12 -m venv .venv
+source .venv/bin/activate
+export PYTHONPATH="$PWD/qshaptools/src:$PWD/qshaptools/src/qshaptools:$PYTHONPATH"
+pip install -r requirements.txt
+pip install -e .
+```
+
+### From GitHub, if access has been granted
+
 ```bash
 git clone https://github.com/IrinaTimush1/QuantumOwenValues.git
 cd QuantumOwenValues
@@ -56,7 +74,9 @@ pip install -e .
 
 The pinned environment uses Qiskit 0.46 APIs such as `Aer` and
 `QuantumInstance`; Qiskit 1.0 or newer is not compatible with these scripts.
-Use Python 3.12 for the submitted environment.
+Use Python 3.12 for the submitted environment. Installing from the ZIP still
+requires ordinary `pip` access to the packages listed in `requirements.txt`;
+it does not require access to the private GitHub repository.
 
 ## Reproducing the thesis figures
 
