@@ -44,9 +44,7 @@ QuantumOwenValues/
 
 ## Installation
 
-The GitHub repository for this thesis artifact is private. Examiners do not
-need GitHub access if they receive the submitted ZIP archive; all code, input
-data, pruned result files, and the thesis PDF are included in the archive.
+The GitHub repository for this thesis artifact is private.
 
 ### From the submitted ZIP archive
 
